@@ -9,13 +9,32 @@ def writeData(path: str, data: dict):
             print(e)
 
 
-def readData(path: str) -> str:
+def readData(path: str) -> dict:
     with open(path, 'r') as json_data:
         try:
             data = json.load(json_data)
             return data
         except Exception as e:
             return e
+
+
+def getDataFromUser(data: dict, name: str) -> dict:
+    return data[name]
+
+def updateUser(name: str, data_user: dict):
+    with open("data.json", "r") as jsonFile:
+        data = json.load(jsonFile)
+    data[name] = data_user
+    with open("data.json", "w") as jsonFile:
+        json.dump(data, jsonFile)
+
+def addUser(data_user: dict):
+    with open("data.json", "r") as jsonFile:
+        data = json.load(jsonFile)
+    data.update(data_user)
+    with open("data.json", "w") as jsonFile:
+        json.dump(data, jsonFile)
+
 
 
 class Stats:
@@ -26,36 +45,35 @@ class Stats:
     def __str__(self):
         return str(readData('data.json'))
 
-    def getMeanUser(self, data: dict, name: str) -> str:
+    def getMeanUser(self, data: dict, name: str) -> float:
         data_user = data[name]
-        return str("nombre d'essaie moyen : " + data_user["total_number_of_try"] / data_user["tl_number_of_game_played"])
+        print("nombre d'essaie moyen : " + str(data_user["total_number_of_try"] / data_user["tl_number_of_game_played"]))
+        return data_user["total_number_of_try"] / data_user["tl_number_of_game_played"]
 
-    def getMedianUser(self, data: dict, name: str) -> str:
+    def getTime(self, data: dict, name: str, time: int) -> float:
         data_user = data[name]
-        return str("nombre d'essaie median : " + self.getMedian(data, name))
+        print("temps moyen : " + str(data_user["total_time"] / time))
+        return data_user["total_time"] / time
 
-    def getMedian(self, data: dict, name: str) -> str:
-        data_user = data[name]
-        data_user.sort()
-        if len(data_user) % 2 == 0:
-            return str((data_user[len(data_user) // 2] + data_user[len(data_user) // 2 - 1]) / 2)
-        else:
-            return str(data_user[len(data_user) // 2])
-
-    def getTime(self, data: dict, name: str, time: int) -> str:
-        data_user = data[name]
-        return str("temps moyen : " + data_user["total_time"] / time)
-
-    def updateDataUser(self, data: dict):
-        data = readData('data.json')
-        data[self.name] = self.stats
-        writeData('data.json', data)
 
 
 if __name__ == '__main__':
-    stats = Stats({"user1": {"total_number_of_try": 1, "total_time": 7794793, "tl_number_of_game_played": 1}})
+    stats = Stats({"user1": {"total_number_of_try": 7, "total_time": 779435593, "tl_number_of_game_played": 4}})
     print(stats)
-
+    print(stats.getMeanUser(readData('data.json'), "user1"))
+    print(stats.getTime(readData('data.json'), "user1", 4))
+    user2 = \
+        {
+            "user2": {
+                "total_number_of_try": 17,
+                "total_time": 7794793,
+                "tl_number_of_game_played": 4
+            }
+        }
+    print(readData('data.json'))
+    addUser(user2)
+    print(readData('data.json'))
+    updateUser("user", user2)
 
 # Example of data :
 # {
