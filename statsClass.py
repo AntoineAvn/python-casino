@@ -40,12 +40,13 @@ def addUser(data_user: dict):
 class Stats:
     def __init__(self, stats: dict):
         self.stats = stats
+
         writeData('data.json', self.stats)
 
     def __str__(self):
         return str(readData('data.json'))
 
-    def getMeanUser(self, data: dict, name: str) -> float:
+    def getMean(self, data: dict, name: str) -> float:
         data_user = data[name]
         print("nombre d'essaie moyen : " + str(data_user["total_number_of_try"] / data_user["tl_number_of_game_played"]))
         return data_user["total_number_of_try"] / data_user["tl_number_of_game_played"]
@@ -54,6 +55,8 @@ class Stats:
         data_user = data[name]
         print("temps moyen : " + str(data_user["total_time"] / time))
         return data_user["total_time"] / time
+
+
 
 
 
